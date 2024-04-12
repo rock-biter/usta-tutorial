@@ -3,6 +3,8 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import * as dat from 'lil-gui'
 import { AmbientLight, DirectionalLight } from 'three'
+import vertex from './src/shaders/vertex.glsl'
+import fragment from './src/shaders/fragment.glsl'
 
 /**
  * Debug
@@ -19,21 +21,53 @@ const scene = new THREE.Scene()
  * BOX
  */
 // const material = new THREE.MeshNormalMaterial()
-const material = new THREE.MeshStandardMaterial({ color: 'coral' })
-const geometry = new THREE.BoxGeometry(1, 1, 1)
+// const material = new THREE.MeshStandardMaterial({ color: 'coral' })
+// const geometry = new THREE.BoxGeometry(1, 1, 1)
 
 /**
  * Plane
  */
-const groundMaterial = new THREE.MeshStandardMaterial({ color: 'lightgray' })
-const groundGeometry = new THREE.PlaneGeometry(10, 10)
-groundGeometry.rotateX(-Math.PI * 0.5)
-const ground = new THREE.Mesh(groundGeometry, groundMaterial)
-scene.add(ground)
+// const groundMaterial = new THREE.MeshStandardMaterial({ color: 'lightgray' })
+// const groundGeometry = new THREE.PlaneGeometry(10, 10)
+// groundGeometry.rotateX(-Math.PI * 0.5)
+// const ground = new THREE.Mesh(groundGeometry, groundMaterial)
+// scene.add(ground)
 
-const mesh = new THREE.Mesh(geometry, material)
-mesh.position.y += 0.5
-scene.add(mesh)
+// const mesh = new THREE.Mesh(geometry, material)
+// mesh.position.y += 0.5
+// scene.add(mesh)
+const geometry = new THREE.BufferGeometry()
+const num = 500
+const bound = 20
+
+const positionArray = new Float32Array(num * 3)
+const colorArray = new Float32Array(num * 3)
+
+for (let i = 0; i < num; i++) {
+	const x = Math.random() * bound - bound / 2
+	const y = Math.random() * bound - bound / 2
+	const z = Math.random() * bound - bound / 2
+
+	const r = Math.random()
+	const g = Math.random()
+	const b = Math.random()
+
+	positionArray.set([x, y, z], i * 3)
+	colorArray.set([r, g, b], i * 3)
+}
+
+console.log([positionArray])
+geometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
+geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3))
+
+const material = new THREE.ShaderMaterial({
+	fragmentShader: fragment,
+	vertexShader: vertex,
+	transparent: true,
+})
+
+const particles = new THREE.Points(geometry, material)
+scene.add(particles)
 
 /**
  * render sizes
