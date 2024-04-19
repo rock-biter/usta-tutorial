@@ -1,0 +1,11 @@
+Model Information:
+* title:	Monkey head with 70 Shape Keys, for training.
+* source:	https://sketchfab.com/3d-models/monkey-head-with-70-shape-keys-for-training-a84332172b264fa3895c8c6dc479a3d6
+* author:	DenixStudio (https://sketchfab.com/jDenixStudio)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Monkey head with 70 Shape Keys, for training." (https://sketchfab.com/3d-models/monkey-head-with-70-shape-keys-for-training-a84332172b264fa3895c8c6dc479a3d6) by DenixStudio (https://sketchfab.com/jDenixStudio) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
