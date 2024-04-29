@@ -1,0 +1,11 @@
+Model Information:
+* title:	Rabbit
+* source:	https://sketchfab.com/3d-models/rabbit-4cf175ddd8d94c7f8705d0d3b9586e6e
+* author:	AIUM2 (https://sketchfab.com/alfredonicolas)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Rabbit" (https://sketchfab.com/3d-models/rabbit-4cf175ddd8d94c7f8705d0d3b9586e6e) by AIUM2 (https://sketchfab.com/alfredonicolas) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

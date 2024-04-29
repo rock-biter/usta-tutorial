@@ -4,5 +4,16 @@
 
 html,
 body {
-	overflow: hidden;
+	/* overflow: hidden; */
+	background-color: black;
+}
+
+canvas {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+}
+
+#app {
+	@apply z-50 relative;
 }
