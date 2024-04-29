@@ -6,21 +6,73 @@ import { AmbientLight, DirectionalLight } from 'three'
 import vertex from './src/shaders/vertex.glsl'
 import fragment from './src/shaders/fragment.glsl'
 import monkeySrc from '/3d-models/monkey-head/scene.gltf?url'
+import rabbitSrc from '/3d-models/rabbit/scene.gltf?url'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
+const uniforms = {
+	uTime: { value: 0 },
+	uProgress: { value: 0 },
+}
 
 /**
  * Debug
  */
 // const gui = new dat.GUI()
+// gui.add(uniforms.uProgress, 'value', 0, 1, 0.01)
+
+gsap.to(uniforms.uProgress, {
+	value: 1,
+	duration: 2,
+	ease: 'linear',
+	scrollTrigger: {
+		trigger: '#app',
+		start: 'top top',
+		end: 'bottom bottom',
+		scrub: 2,
+	},
+})
 
 /**
  * Scene
  */
 const scene = new THREE.Scene()
 // scene.background = new THREE.Color(0xdedede)
+const manager = new THREE.LoadingManager()
 
-const loader = new GLTFLoader()
+const loader = new GLTFLoader(manager)
+
+const models = {
+	monkey: null,
+	rabbit: null,
+}
+
+manager.onLoad = () => {
+	createParticles(models)
+}
+
+loader.load(rabbitSrc, (gltf) => {
+	console.log(gltf.scene)
+
+	let model
+
+	gltf.scene.traverse((el) => {
+		if (el instanceof THREE.Mesh) {
+			model = el
+		}
+	})
+
+	model.geometry.scale(1.75, 1.75, 1.75)
+	model.geometry.rotateY(Math.PI * 0.5)
+	model.geometry.center()
+
+	// scene.add(model)
+	models.rabbit = model
+})
 
 loader.load(monkeySrc, (gltf) => {
 	let model
@@ -33,9 +85,11 @@ loader.load(monkeySrc, (gltf) => {
 	console.log(model)
 	// scene.add(model)
 	model.geometry.scale(3, 3, 3)
-	const sampler = new MeshSurfaceSampler(model).build()
 
-	createParticles(sampler)
+	models.monkey = model
+	// const sampler = new MeshSurfaceSampler(model).build()
+
+	// createParticles(sampler)
 })
 
 /**
@@ -63,16 +117,16 @@ const colors = [
 	new THREE.Color('plum'),
 ]
 
-const uniforms = {
-	uTime: { value: 0 },
-}
+function createParticles({ monkey, rabbit }) {
+	const monkeySampler = new MeshSurfaceSampler(monkey).build()
+	const rabbitSampler = new MeshSurfaceSampler(rabbit).build()
 
-function createParticles(sampler) {
 	const geometry = new THREE.BufferGeometry()
 	const num = 20000
 	const bound = 20
 
 	const positionArray = new Float32Array(num * 3)
+	const position2Array = new Float32Array(num * 3)
 	const colorArray = new Float32Array(num * 3)
 	const offsetArray = new Float32Array(num)
 
@@ -83,9 +137,13 @@ function createParticles(sampler) {
 		// const y = Math.random() * bound - bound / 2
 		// const z = Math.random() * bound - bound / 2
 
-		sampler.sample(pos)
-
+		monkeySampler.sample(pos)
 		const [x, y, z] = pos
+		positionArray.set([x, y, z], i * 3)
+
+		rabbitSampler.sample(pos)
+		const [x2, y2, z2] = pos
+		position2Array.set([x2, y2, z2], i * 3)
 
 		// const r = Math.random()
 		// const g = Math.random()
@@ -96,12 +154,15 @@ function createParticles(sampler) {
 		const offset = Math.random()
 		offsetArray[i] = offset
 
-		positionArray.set([x, y, z], i * 3)
 		colorArray.set([r, g, b], i * 3)
 	}
 
 	console.log([positionArray])
 	geometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
+	geometry.setAttribute(
+		'position2',
+		new THREE.BufferAttribute(position2Array, 3)
+	)
 	geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3))
 	geometry.setAttribute('offset', new THREE.BufferAttribute(offsetArray, 1))
 

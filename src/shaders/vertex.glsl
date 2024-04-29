@@ -1,13 +1,16 @@
 attribute vec3 color;
 attribute float offset;
+attribute vec3 position2;
 varying vec3 vColor;
 uniform float uTime;
+uniform float uProgress;
 varying float vDistance;
 
 void main() {
 
   vColor = color;
-  vec3 pos = position;
+  vec3 pos = mix(position,position2,uProgress);
+  pos *= 1. + sin(3.14 * uProgress) * 3.;
   pos.y += sin(uTime * 0.5 * (offset - 0.5) + offset * 10.) * 0.15;
   pos.x += cos(uTime * 0.5 * (offset - 0.5) + offset * 10.) * 0.15;
 
